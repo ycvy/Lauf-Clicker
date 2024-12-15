@@ -20,12 +20,31 @@
             </div>
         </div>
         <div id="upgrades">
-            <button class="upgrade-button" onclick="buyAutoRunner()">
-                Kaufe Autoläufer (10 Meter)
-            </button>
-            <button class="upgrade-button" onclick="upgradeClick()">
-                Verbessere Klick (20 Meter)
-            </button>
+            <div class="upgrade-section">
+                <h2>Läufer & Training</h2>
+                <button class="upgrade-button" id="autorunner-button" onclick="buyAutoRunner()">
+                    Autoläufer (<span id="autorunner-cost">10</span> Meter) - Level: <span id="autorunner-level">0</span>
+                </button>
+                <button class="upgrade-button" id="training-button" onclick="upgradeClick()">
+                    Lauftraining (<span id="training-cost">20</span> Meter) - Level: <span id="training-level">1</span>
+                </button>
+                <button class="upgrade-button" id="coach-button" onclick="buySpeedCoach()">
+                    Speedcoach (<span id="coach-cost">50</span> Meter) - Level: <span id="coach-level">0</span>
+                </button>
+            </div>
+            
+            <div class="upgrade-section">
+                <h2>Ausrüstung</h2>
+                <button class="upgrade-button" id="shoes-button" onclick="buyShoes()">
+                    Bessere Schuhe (<span id="shoes-cost">30</span> Meter) - Level: <span id="shoes-level">0</span>
+                </button>
+                <button class="upgrade-button" id="drink-button" onclick="buyEnergyDrink()">
+                    Energydrink (<span id="drink-cost">15</span> Meter) - Level: <span id="drink-level">0</span>
+                </button>
+                <button class="upgrade-button" id="gps-button" onclick="buyGPS()">
+                    GPS-Uhr (<span id="gps-cost">100</span> Meter) - Level: <span id="gps-level">0</span>
+                </button>
+            </div>
         </div>
     </div>
     <script src="game.js"></script>
