@@ -35,6 +35,39 @@ let statistics = {
     bestMPS: 0
 };
 
+// Füge diese Variablen am Anfang hinzu
+let skillPoints = 0;
+let skills = {
+    sprint: {
+        level: 0,
+        maxLevel: 10,
+        effect: level => 1 + (level * 0.1) // +10% pro Level
+    },
+    momentum: {
+        level: 0,
+        maxLevel: 10,
+        effect: level => 1 + (level * 0.15) // +15% pro Level
+    },
+    stamina: {
+        level: 0,
+        maxLevel: 10,
+        effect: level => 1 + (level * 0.05) // +5% pro Level
+    },
+    recovery: {
+        level: 0,
+        maxLevel: 10,
+        effect: level => 1 + (level * 0.2) // +20% pro Level
+    }
+};
+
+// Füge diese Variablen zu den bestehenden hinzu
+let skillPointMilestones = [
+    { meters: 1000, reached: false },
+    { meters: 10000, reached: false },
+    { meters: 100000, reached: false },
+    { meters: 1000000, reached: false }
+];
+
 function getAutoRunnerCost() {
     return Math.floor(10 * Math.pow(1.5, autoRunnerLevel));
 }
@@ -80,6 +113,21 @@ function updateDisplay() {
         statistics.bestMPS = currentMPS;
     }
     document.getElementById('best-mps').textContent = statistics.bestMPS.toFixed(1);
+
+    // Update Skill Anzeigen
+    document.getElementById('skill-points').textContent = skillPoints;
+    document.getElementById('sprint-level').textContent = skills.sprint.level;
+    document.getElementById('momentum-level').textContent = skills.momentum.level;
+    document.getElementById('stamina-level').textContent = skills.stamina.level;
+    document.getElementById('recovery-level').textContent = skills.recovery.level;
+    
+    // Update Skill Buttons
+    for (let skill in skills) {
+        const button = document.querySelector(`#skill-${skill} .skill-button`);
+        if (button) {
+            button.disabled = skillPoints === 0 || skills[skill].level >= skills[skill].maxLevel;
+        }
+    }
 }
 
 function updateButtons() {
@@ -129,6 +177,10 @@ function calculateClickPower() {
 function clickRun() {
     meters += calculateClickPower();
     statistics.totalClicks++;
+    
+    // Prüfe Milestones bei jedem Update
+    checkSkillPointMilestones();
+    
     updateDisplay();
     checkAchievements();
 }
@@ -242,10 +294,16 @@ function checkAchievements() {
 }
 
 function unlockAchievement(id, name) {
-    achievements[id] = true;
-    document.getElementById(`achievement-${id}`).classList.remove('locked');
-    document.getElementById(`achievement-${id}`).classList.add('unlocked');
-    showNotification(`Achievement freigeschaltet: ${name}!`);
+    if (!achievements[id]) {
+        achievements[id] = true;
+        document.getElementById(`achievement-${id}`).classList.remove('locked');
+        document.getElementById(`achievement-${id}`).classList.add('unlocked');
+        
+        // Gib Skillpunkte für Achievements
+        skillPoints++;
+        showNotification(`Achievement freigeschaltet: ${name}! (+1 Skillpunkt)`);
+        updateDisplay();
+    }
 }
 
 function showNotification(message) {
@@ -264,7 +322,15 @@ function prestige() {
     if (meters >= 1000000) {
         prestigeLevel++;
         statistics.totalPrestiges++;
-        prestigeMultiplier = 1 + (prestigeLevel * 0.2); // +20% pro Level
+        prestigeMultiplier = 1 + (prestigeLevel * 0.2);
+
+        // Mehr Skillpunkte basierend auf erreichter Meter-Anzahl
+        let extraPoints = Math.floor(Math.log10(meters / 1000000));
+        let totalPoints = 2 + extraPoints;
+        skillPoints += totalPoints;
+        
+        // Reset Milestones
+        skillPointMilestones.forEach(milestone => milestone.reached = false);
 
         // Speichere Gesamtmeter in Statistiken
         statistics.totalMeters += meters;
@@ -286,8 +352,90 @@ function prestige() {
         clickPower = 1 * prestigeMultiplier;
         trainingLevel = 1;
 
+        // Füge Skillpunkte hinzu
+        skillPoints += 2; // 2 Skillpunkte pro Prestige
+        
         updateDisplay();
-        showNotification(`Prestige Level ${prestigeLevel} erreicht! Neuer Multiplikator: ${prestigeMultiplier.toFixed(1)}x`);
+        updateSkillEffects();
+        showNotification(`Prestige Level ${prestigeLevel} erreicht! (+${totalPoints} Skillpunkte)`);
     }
+}
+
+// Füge diese Funktionen hinzu
+function upgradeSkill(skillName) {
+    if (skillPoints > 0 && skills[skillName].level < skills[skillName].maxLevel) {
+        skillPoints--;
+        skills[skillName].level++;
+        updateDisplay();
+        updateSkillEffects();
+    }
+}
+
+function updateSkillEffects() {
+    // Update Sprint Effect
+    let sprintMultiplier = skills.sprint.effect(skills.sprint.level);
+    
+    // Update Momentum Effect
+    let momentumMultiplier = skills.momentum.effect(skills.momentum.level);
+    
+    // Update Stamina Effect
+    let staminaMultiplier = skills.stamina.effect(skills.stamina.level);
+    
+    // Update Recovery Effect
+    let recoveryMultiplier = skills.recovery.effect(skills.recovery.level);
+    
+    // Anwenden der Effekte
+    calculateClickPower = () => {
+        return (clickPower * 
+               (1 + shoes * 0.2) * 
+               (1 + energyDrink * 0.1 * recoveryMultiplier) * 
+               (1 + gpsWatch * 0.3)) * 
+               prestigeMultiplier * 
+               sprintMultiplier * 
+               staminaMultiplier;
+    };
+    
+    calculateMPS = () => {
+        return (autoRunners + 
+               (speedCoach * 2) + 
+               (gpsWatch * 5)) * 
+               prestigeMultiplier * 
+               momentumMultiplier * 
+               staminaMultiplier;
+    };
+}
+
+// Füge diese Funktion hinzu
+function showTab(tabName) {
+    // Verstecke alle Sektionen
+    const sections = document.querySelectorAll('.game-section');
+    sections.forEach(section => section.style.display = 'none');
+
+    // Entferne aktive Klasse von allen Tabs
+    const tabs = document.querySelectorAll('.tab-button');
+    tabs.forEach(tab => tab.classList.remove('active'));
+
+    // Zeige die ausgewählte Sektion
+    const activeSection = document.getElementById(`${tabName}-section`);
+    if (activeSection) {
+        activeSection.style.display = 'block';
+    }
+
+    // Markiere den aktiven Tab
+    const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
+    if (activeTab) {
+        activeTab.classList.add('active');
+    }
+}
+
+// Füge diese Funktion hinzu
+function checkSkillPointMilestones() {
+    skillPointMilestones.forEach(milestone => {
+        if (!milestone.reached && meters >= milestone.meters) {
+            skillPoints++;
+            milestone.reached = true;
+            showNotification(`Skillpunkt erhalten! (${milestone.meters} Meter erreicht)`);
+        }
+    });
 }
   

@@ -8,45 +8,54 @@
 </head>
 <body>
     <div id="game-container">
-        <h1>Lauf Clicker</h1>
-        <div id="stats">
-            <p>Meter: <span id="meters">0</span></p>
-            <p>Meter pro Sekunde: <span id="mps">0</span></p>
-            <p>Klick-Stärke: <span id="click-power">1</span></p>
+        <div class="game-tabs">
+            <button class="tab-button active" data-tab="main" onclick="showTab('main')">Hauptspiel</button>
+            <button class="tab-button" data-tab="achievements" onclick="showTab('achievements')">Achievements</button>
+            <button class="tab-button" data-tab="prestige" onclick="showTab('prestige')">Prestige</button>
+            <button class="tab-button" data-tab="skills" onclick="showTab('skills')">Fähigkeiten</button>
+            <button class="tab-button" data-tab="statistics" onclick="showTab('statistics')">Statistiken</button>
         </div>
-        <div id="track-container">
-            <div id="track-outer">
-                <div id="track-inner"></div>
+        <div id="main-section" class="game-section">
+            <h1>Lauf Clicker</h1>
+            <div id="stats">
+                <p>Meter: <span id="meters">0</span></p>
+                <p>Meter pro Sekunde: <span id="mps">0</span></p>
+                <p>Klick-Stärke: <span id="click-power">1</span></p>
+            </div>
+            <div id="track-container">
+                <div id="track-outer">
+                    <div id="track-inner"></div>
+                </div>
+            </div>
+            <div id="upgrades">
+                <div class="upgrade-section">
+                    <h2>Läufer & Training</h2>
+                    <button class="upgrade-button" id="autorunner-button" onclick="buyAutoRunner()">
+                        Autoläufer (<span id="autorunner-cost">10</span> Meter) - Level: <span id="autorunner-level">0</span>
+                    </button>
+                    <button class="upgrade-button" id="training-button" onclick="upgradeClick()">
+                        Lauftraining (<span id="training-cost">20</span> Meter) - Level: <span id="training-level">1</span>
+                    </button>
+                    <button class="upgrade-button" id="coach-button" onclick="buySpeedCoach()">
+                        Speedcoach (<span id="coach-cost">50</span> Meter) - Level: <span id="coach-level">0</span>
+                    </button>
+                </div>
+                
+                <div class="upgrade-section">
+                    <h2>Ausrüstung</h2>
+                    <button class="upgrade-button" id="shoes-button" onclick="buyShoes()">
+                        Bessere Schuhe (<span id="shoes-cost">30</span> Meter) - Level: <span id="shoes-level">0</span>
+                    </button>
+                    <button class="upgrade-button" id="drink-button" onclick="buyEnergyDrink()">
+                        Energydrink (<span id="drink-cost">15</span> Meter) - Level: <span id="drink-level">0</span>
+                    </button>
+                    <button class="upgrade-button" id="gps-button" onclick="buyGPS()">
+                        GPS-Uhr (<span id="gps-cost">100</span> Meter) - Level: <span id="gps-level">0</span>
+                    </button>
+                </div>
             </div>
         </div>
-        <div id="upgrades">
-            <div class="upgrade-section">
-                <h2>Läufer & Training</h2>
-                <button class="upgrade-button" id="autorunner-button" onclick="buyAutoRunner()">
-                    Autoläufer (<span id="autorunner-cost">10</span> Meter) - Level: <span id="autorunner-level">0</span>
-                </button>
-                <button class="upgrade-button" id="training-button" onclick="upgradeClick()">
-                    Lauftraining (<span id="training-cost">20</span> Meter) - Level: <span id="training-level">1</span>
-                </button>
-                <button class="upgrade-button" id="coach-button" onclick="buySpeedCoach()">
-                    Speedcoach (<span id="coach-cost">50</span> Meter) - Level: <span id="coach-level">0</span>
-                </button>
-            </div>
-            
-            <div class="upgrade-section">
-                <h2>Ausrüstung</h2>
-                <button class="upgrade-button" id="shoes-button" onclick="buyShoes()">
-                    Bessere Schuhe (<span id="shoes-cost">30</span> Meter) - Level: <span id="shoes-level">0</span>
-                </button>
-                <button class="upgrade-button" id="drink-button" onclick="buyEnergyDrink()">
-                    Energydrink (<span id="drink-cost">15</span> Meter) - Level: <span id="drink-level">0</span>
-                </button>
-                <button class="upgrade-button" id="gps-button" onclick="buyGPS()">
-                    GPS-Uhr (<span id="gps-cost">100</span> Meter) - Level: <span id="gps-level">0</span>
-                </button>
-            </div>
-        </div>
-        <div id="achievements-section">
+        <div id="achievements-section" class="game-section">
             <h2>Achievements</h2>
             <div id="achievements-container">
                 <div class="achievement locked" id="achievement-100m">
@@ -86,6 +95,44 @@
                 </button>
             </div>
         </div>
+        <div id="skills-section" class="game-section">
+            <h2>Fähigkeiten</h2>
+            <div class="skill-points">
+                <p>Verfügbare Skillpunkte: <span id="skill-points">0</span></p>
+            </div>
+            <div class="skill-tree">
+                <div class="skill-column">
+                    <h3>Geschwindigkeit</h3>
+                    <div class="skill-item" id="skill-sprint">
+                        <span class="skill-name">Sprint</span>
+                        <span class="skill-desc">+10% Klick-Stärke</span>
+                        <span class="skill-level">Level: <span id="sprint-level">0</span>/10</span>
+                        <button onclick="upgradeSkill('sprint')" class="skill-button">Verbessern (1 Punkt)</button>
+                    </div>
+                    <div class="skill-item" id="skill-momentum">
+                        <span class="skill-name">Momentum</span>
+                        <span class="skill-desc">+15% Autoläufer Geschwindigkeit</span>
+                        <span class="skill-level">Level: <span id="momentum-level">0</span>/10</span>
+                        <button onclick="upgradeSkill('momentum')" class="skill-button">Verbessern (1 Punkt)</button>
+                    </div>
+                </div>
+                <div class="skill-column">
+                    <h3>Ausdauer</h3>
+                    <div class="skill-item" id="skill-stamina">
+                        <span class="skill-name">Ausdauer</span>
+                        <span class="skill-desc">+5% alle Einnahmen</span>
+                        <span class="skill-level">Level: <span id="stamina-level">0</span>/10</span>
+                        <button onclick="upgradeSkill('stamina')" class="skill-button">Verbessern (1 Punkt)</button>
+                    </div>
+                    <div class="skill-item" id="skill-recovery">
+                        <span class="skill-name">Regeneration</span>
+                        <span class="skill-desc">+20% Energydrink Effekt</span>
+                        <span class="skill-level">Level: <span id="recovery-level">0</span>/10</span>
+                        <button onclick="upgradeSkill('recovery')" class="skill-button">Verbessern (1 Punkt)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="statistics-section" class="game-section">
             <h2>Statistiken</h2>
             <div class="stats-grid">
@@ -106,14 +153,6 @@
                     <span id="best-mps">0</span>
                 </div>
             </div>
-        </div>
-        <div class="game-tabs">
-            <button onclick="showTab('main')">Hauptspiel</button>
-            <button onclick="showTab('prestige')">Prestige</button>
-            <button onclick="showTab('challenges')">Herausforderungen</button>
-            <button onclick="showTab('collection')">Sammlung</button>
-            <button onclick="showTab('skills')">Fähigkeiten</button>
-            <button onclick="showTab('stats')">Statistiken</button>
         </div>
     </div>
     <script src="game.js"></script>
