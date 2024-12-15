@@ -1,0 +1,33 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lauf Clicker</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <h1>Lauf Clicker</h1>
+        <div id="stats">
+            <p>Meter: <span id="meters">0</span></p>
+            <p>Meter pro Sekunde: <span id="mps">0</span></p>
+            <p>Klick-Stärke: <span id="click-power">1</span></p>
+        </div>
+        <div id="track-container">
+            <div id="track-outer">
+                <div id="track-inner"></div>
+            </div>
+        </div>
+        <div id="upgrades">
+            <button class="upgrade-button" onclick="buyAutoRunner()">
+                Kaufe Autoläufer (10 Meter)
+            </button>
+            <button class="upgrade-button" onclick="upgradeClick()">
+                Verbessere Klick (20 Meter)
+            </button>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
