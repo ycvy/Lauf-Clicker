@@ -415,4 +415,21 @@ button {
 .game-section {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+}
+
+/* Füge spezielle Styles für die neuen Achievements hinzu */
+#achievement-ironman.unlocked {
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    color: white;
+    font-weight: bold;
+}
+
+#achievement-marathon.unlocked {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#achievement-durchfall.unlocked {
+    background-color: #795548;
+    color: white;
 } 

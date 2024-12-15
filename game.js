@@ -22,7 +22,13 @@ let achievements = {
     '10km': false,
     'clicks': false,
     'autorunner': false,
-    'upgrades': false
+    'upgrades': false,
+    'gu': false,
+    'durchfall': false,
+    '5k': false,
+    'ultra': false,
+    'marathon': false,
+    'ironman': false
 };
 
 // Neue Variablen am Anfang der Datei
@@ -301,6 +307,38 @@ function checkAchievements() {
         drinkLevel > 0 && 
         gpsLevel > 0) {
         unlockAchievement('upgrades', 'Ausrüstungs-Profi');
+    }
+
+    // Neue Achievement-Checks
+    if (!achievements['gu'] && drinkLevel >= 5) {
+        unlockAchievement('gu', 'GU Energy - Kaufe 5 Energydrinks');
+    }
+
+    if (!achievements['durchfall'] && drinkLevel >= 10) {
+        unlockAchievement('durchfall', 'Durchfall - Zu viele Energydrinks!');
+    }
+
+    if (!achievements['5k'] && meters >= 5000) {
+        unlockAchievement('5k', '5K Finisher');
+    }
+
+    if (!achievements['ultra'] && meters >= 50000) {
+        unlockAchievement('ultra', 'Ultra Runner');
+    }
+
+    if (!achievements['marathon'] && meters >= 42195) {
+        unlockAchievement('marathon', 'Marathon Finisher');
+    }
+
+    if (!achievements['ironman'] && 
+        meters >= 100000 && 
+        autoRunnerLevel >= 10 && 
+        trainingLevel >= 10 && 
+        coachLevel >= 10 && 
+        shoesLevel >= 10 && 
+        drinkLevel >= 10 && 
+        gpsLevel >= 10) {
+        unlockAchievement('ironman', 'Ironman - Der ultimative Athlet');
     }
 }
 
