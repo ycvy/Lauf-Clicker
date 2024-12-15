@@ -4,7 +4,7 @@ Ein Clicker-Spiel mit Laufbahn-Thematik.
 
 ## Spielen
 
-Das Spiel ist hier spielbar: https://dein-username.github.io/lauf-clicker/
+Das Spiel ist hier spielbar: https://ycvy.github.io/Lauf-Clicker/
 
 ## Mobile Installation
 
