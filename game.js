@@ -74,41 +74,6 @@ let skillPointMilestones = [
     { meters: 1000000, reached: false }
 ];
 
-// Neue Variablen für tägliche Herausforderungen
-let dailyChallenges = {
-    current: null,
-    lastUpdate: 0,
-    completed: false
-};
-
-// Liste möglicher Herausforderungen
-const challengePool = [
-    {
-        id: 'speedrun',
-        name: 'Speedrun',
-        description: 'Erreiche 1000 Meter in 2 Minuten',
-        goal: 1000,
-        timeLimit: 120,
-        reward: 2 // Skillpunkte
-    },
-    {
-        id: 'endurance',
-        name: 'Ausdauertest',
-        description: 'Laufe 30 Minuten ohne Prestige',
-        goal: 1800, // 30 Minuten in Sekunden
-        timeLimit: 1800,
-        reward: 3
-    },
-    {
-        id: 'clicking',
-        name: 'Klick-Marathon',
-        description: '100 Klicks in einer Minute',
-        goal: 100,
-        timeLimit: 60,
-        reward: 2
-    }
-];
-
 function getAutoRunnerCost() {
     return Math.floor(10 * Math.pow(1.5, autoRunnerLevel));
 }
@@ -179,6 +144,13 @@ function updateDisplay() {
         if (button) {
             button.disabled = skillPoints === 0 || skills[skill].level >= skills[skill].maxLevel;
         }
+    }
+
+    // Update Challenge Display
+    if (dailyChallenges.current) {
+        document.getElementById('challenge-name').textContent = dailyChallenges.current.name;
+        document.getElementById('challenge-description').textContent = dailyChallenges.current.description;
+        document.getElementById('challenge-reward').textContent = dailyChallenges.current.reward;
     }
 }
 
@@ -557,65 +529,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     requestAnimationFrame(optimizedUpdate);
+
+    // Initialisiere die tägliche Herausforderung
+    generateDailyChallenge();
+    
+    // Starte den Challenge-Check
+    setInterval(checkChallengeProgress, 1000);
 });
-
-// Funktion zum Generieren einer neuen Herausforderung
-function generateDailyChallenge() {
-    const now = Date.now();
-    const dayStart = new Date().setHours(0,0,0,0);
-    
-    if (now - dailyChallenges.lastUpdate > 24 * 60 * 60 * 1000 || !dailyChallenges.current) {
-        const randomChallenge = challengePool[Math.floor(Math.random() * challengePool.length)];
-        dailyChallenges.current = {...randomChallenge};
-        dailyChallenges.lastUpdate = dayStart;
-        dailyChallenges.completed = false;
-        dailyChallenges.progress = 0;
-        dailyChallenges.startTime = null;
-    }
-    
-    updateChallengeDisplay();
-}
-
-// Funktion zum Überprüfen des Challenge-Fortschritts
-function checkChallengeProgress() {
-    if (!dailyChallenges.current || dailyChallenges.completed) return;
-    
-    const challenge = dailyChallenges.current;
-    
-    if (!dailyChallenges.startTime) {
-        dailyChallenges.startTime = Date.now();
-    }
-    
-    const timeElapsed = (Date.now() - dailyChallenges.startTime) / 1000;
-    
-    switch(challenge.id) {
-        case 'speedrun':
-            if (meters >= challenge.goal && timeElapsed <= challenge.timeLimit) {
-                completeChallenge();
-            }
-            break;
-        case 'endurance':
-            if (timeElapsed >= challenge.goal) {
-                completeChallenge();
-            }
-            break;
-        case 'clicking':
-            if (statistics.totalClicks >= challenge.goal && timeElapsed <= challenge.timeLimit) {
-                completeChallenge();
-            }
-            break;
-    }
-    
-    updateChallengeDisplay();
-}
-
-// Funktion zum Abschließen einer Herausforderung
-function completeChallenge() {
-    if (!dailyChallenges.completed) {
-        dailyChallenges.completed = true;
-        skillPoints += dailyChallenges.current.reward;
-        showNotification(`Herausforderung abgeschlossen! +${dailyChallenges.current.reward} Skillpunkte`);
-        updateDisplay();
-    }
-}
   
