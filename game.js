@@ -249,7 +249,9 @@ function buyEnergyDrink() {
         meters -= cost;
         energyDrink += 1;
         drinkLevel += 1;
+        console.log("Bought Energy Drink - Current amount:", energyDrink);
         updateDisplay();
+        checkAchievements();
     }
 }
 
@@ -309,12 +311,15 @@ function checkAchievements() {
         unlockAchievement('upgrades', 'Ausrüstungs-Profi');
     }
 
-    // Neue Achievement-Checks
-    if (!achievements['gu'] && drinkLevel >= 5) {
+    // GU Achievement Check - Debug-Ausgabe hinzufügen
+    console.log("Checking GU Achievement - drinkLevel:", drinkLevel);
+    if (!achievements['gu'] && energyDrink >= 5) {
+        console.log("Unlocking GU Achievement");
         unlockAchievement('gu', 'GU Energy - Kaufe 5 Energydrinks');
     }
 
-    if (!achievements['durchfall'] && drinkLevel >= 10) {
+    // Durchfall Achievement
+    if (!achievements['durchfall'] && energyDrink >= 10) {
         unlockAchievement('durchfall', 'Durchfall - Zu viele Energydrinks!');
     }
 
