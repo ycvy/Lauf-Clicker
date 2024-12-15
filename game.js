@@ -220,7 +220,7 @@ function checkAchievements() {
     }
 
     // Klick Achievement
-    if (!achievements['clicks'] && totalClicks >= 100) {
+    if (!achievements['clicks'] && statistics.totalClicks >= 100) {
         unlockAchievement('clicks', 'Klick-Champion');
     }
 
