@@ -28,10 +28,7 @@ let achievements = {
     '5k': false,
     'ultra': false,
     'marathon': false,
-    'ironman': false,
-    'heelstriker': false,
-    'shins': false,
-    'zone2': false
+    'ironman': false
 };
 
 // Neue Variablen am Anfang der Datei
@@ -75,6 +72,41 @@ let skillPointMilestones = [
     { meters: 10000, reached: false },
     { meters: 100000, reached: false },
     { meters: 1000000, reached: false }
+];
+
+// Neue Variablen für tägliche Herausforderungen
+let dailyChallenges = {
+    current: null,
+    lastUpdate: 0,
+    completed: false
+};
+
+// Liste möglicher Herausforderungen
+const challengePool = [
+    {
+        id: 'speedrun',
+        name: 'Speedrun',
+        description: 'Erreiche 1000 Meter in 2 Minuten',
+        goal: 1000,
+        timeLimit: 120,
+        reward: 2 // Skillpunkte
+    },
+    {
+        id: 'endurance',
+        name: 'Ausdauertest',
+        description: 'Laufe 30 Minuten ohne Prestige',
+        goal: 1800, // 30 Minuten in Sekunden
+        timeLimit: 1800,
+        reward: 3
+    },
+    {
+        id: 'clicking',
+        name: 'Klick-Marathon',
+        description: '100 Klicks in einer Minute',
+        goal: 100,
+        timeLimit: 60,
+        reward: 2
+    }
 ];
 
 function getAutoRunnerCost() {
@@ -348,25 +380,6 @@ function checkAchievements() {
         gpsLevel >= 10) {
         unlockAchievement('ironman', 'Ironman - Der ultimative Athlet');
     }
-
-    // Heel Striker Achievement
-    if (!achievements['heelstriker'] && shoesLevel >= 5) {
-        unlockAchievement('heelstriker', 'Heel Striker - Der Fersenläufer');
-    }
-
-    // Shins Exploded Achievement - wenn man zu schnell zu viel läuft
-    if (!achievements['shins'] && 
-        meters >= 10000 && 
-        calculateMPS() >= 50) {
-        unlockAchievement('shins', 'Schienbeinschmerzen - Zu schnell, zu viel!');
-    }
-
-    // Zone 2 Achievement - wenn man konstant langsam läuft
-    if (!achievements['zone2'] && 
-        meters >= 20000 && 
-        calculateMPS() <= 10) {
-        unlockAchievement('zone2', 'Zone 2 - Der geduldige Läufer');
-    }
 }
 
 function unlockAchievement(id, name) {
@@ -545,4 +558,64 @@ document.addEventListener('DOMContentLoaded', function() {
 
     requestAnimationFrame(optimizedUpdate);
 });
+
+// Funktion zum Generieren einer neuen Herausforderung
+function generateDailyChallenge() {
+    const now = Date.now();
+    const dayStart = new Date().setHours(0,0,0,0);
+    
+    if (now - dailyChallenges.lastUpdate > 24 * 60 * 60 * 1000 || !dailyChallenges.current) {
+        const randomChallenge = challengePool[Math.floor(Math.random() * challengePool.length)];
+        dailyChallenges.current = {...randomChallenge};
+        dailyChallenges.lastUpdate = dayStart;
+        dailyChallenges.completed = false;
+        dailyChallenges.progress = 0;
+        dailyChallenges.startTime = null;
+    }
+    
+    updateChallengeDisplay();
+}
+
+// Funktion zum Überprüfen des Challenge-Fortschritts
+function checkChallengeProgress() {
+    if (!dailyChallenges.current || dailyChallenges.completed) return;
+    
+    const challenge = dailyChallenges.current;
+    
+    if (!dailyChallenges.startTime) {
+        dailyChallenges.startTime = Date.now();
+    }
+    
+    const timeElapsed = (Date.now() - dailyChallenges.startTime) / 1000;
+    
+    switch(challenge.id) {
+        case 'speedrun':
+            if (meters >= challenge.goal && timeElapsed <= challenge.timeLimit) {
+                completeChallenge();
+            }
+            break;
+        case 'endurance':
+            if (timeElapsed >= challenge.goal) {
+                completeChallenge();
+            }
+            break;
+        case 'clicking':
+            if (statistics.totalClicks >= challenge.goal && timeElapsed <= challenge.timeLimit) {
+                completeChallenge();
+            }
+            break;
+    }
+    
+    updateChallengeDisplay();
+}
+
+// Funktion zum Abschließen einer Herausforderung
+function completeChallenge() {
+    if (!dailyChallenges.completed) {
+        dailyChallenges.completed = true;
+        skillPoints += dailyChallenges.current.reward;
+        showNotification(`Herausforderung abgeschlossen! +${dailyChallenges.current.reward} Skillpunkte`);
+        updateDisplay();
+    }
+}
   
