@@ -348,27 +348,6 @@ function checkAchievements() {
         gpsLevel >= 10) {
         unlockAchievement('ironman', 'Ironman - Der ultimative Athlet');
     }
-
-    // Zone 2 Achievement - Prüfe auf konstantes, langsames Laufen
-    if (!achievements['zone2'] && 
-        meters >= 10000 && // Mindestens 10km
-        autoRunners >= 1 && // Hat Autoläufer
-        calculateMPS() > 0 && // Läuft aktiv
-        calculateMPS() <= 15) { // Moderates Tempo
-        unlockAchievement('zone2', 'Zone 2 - Der geduldige Läufer');
-    }
-
-    // Heel Striker Achievement
-    if (!achievements['heelstriker'] && shoesLevel >= 5) {
-        unlockAchievement('heelstriker', 'Heel Striker - Der Fersenläufer');
-    }
-
-    // Shins Achievement
-    if (!achievements['shins'] && 
-        meters >= 10000 && 
-        calculateMPS() >= 50) {
-        unlockAchievement('shins', 'Schienbeinschmerzen - Zu schnell, zu viel!');
-    }
 }
 
 function unlockAchievement(id, name) {
