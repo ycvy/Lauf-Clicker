@@ -24,6 +24,10 @@ git clone https://github.com/ycvy/lauf-clicker.git
 
 2. Öffne `index.html` in deinem Browser
 
+## Spielen
+
+Das Spiel ist hier spielbar: https://ycvy.github.io/Lauf-Clicker/
+
 ## 🎯 Spielziel
 
 Sammle so viele Meter wie möglich durch:
