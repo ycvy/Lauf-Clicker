@@ -75,6 +75,46 @@
                 </div>
             </div>
         </div>
+        <div id="prestige-section" class="game-section">
+            <h2>Prestige</h2>
+            <div class="prestige-info">
+                <p>Prestige Level: <span id="prestige-level">0</span></p>
+                <p>Aktueller Bonus: <span id="prestige-multiplier">1</span>x</p>
+                <p>Nächstes Prestige bei: 1.000.000 Meter</p>
+                <button id="prestige-button" class="prestige-button" onclick="prestige()" disabled>
+                    Prestige durchführen
+                </button>
+            </div>
+        </div>
+        <div id="statistics-section" class="game-section">
+            <h2>Statistiken</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">Gesamt Meter:</span>
+                    <span id="total-meters">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Gesamt Klicks:</span>
+                    <span id="total-clicks">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Prestige durchgeführt:</span>
+                    <span id="total-prestiges">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Beste Meter/Sekunde:</span>
+                    <span id="best-mps">0</span>
+                </div>
+            </div>
+        </div>
+        <div class="game-tabs">
+            <button onclick="showTab('main')">Hauptspiel</button>
+            <button onclick="showTab('prestige')">Prestige</button>
+            <button onclick="showTab('challenges')">Herausforderungen</button>
+            <button onclick="showTab('collection')">Sammlung</button>
+            <button onclick="showTab('skills')">Fähigkeiten</button>
+            <button onclick="showTab('stats')">Statistiken</button>
+        </div>
     </div>
     <script src="game.js"></script>
 </body>

@@ -25,6 +25,16 @@ let achievements = {
     'upgrades': false
 };
 
+// Neue Variablen am Anfang der Datei
+let prestigeLevel = 0;
+let prestigeMultiplier = 1;
+let statistics = {
+    totalMeters: 0,
+    totalClicks: 0,
+    totalPrestiges: 0,
+    bestMPS: 0
+};
+
 function getAutoRunnerCost() {
     return Math.floor(10 * Math.pow(1.5, autoRunnerLevel));
 }
@@ -54,6 +64,22 @@ function updateDisplay() {
     document.getElementById('mps').textContent = calculateMPS();
     document.getElementById('click-power').textContent = calculateClickPower().toFixed(1);
     updateButtons();
+
+    // Update Prestige Informationen
+    document.getElementById('prestige-level').textContent = prestigeLevel;
+    document.getElementById('prestige-multiplier').textContent = prestigeMultiplier.toFixed(1);
+    document.getElementById('prestige-button').disabled = meters < 1000000;
+
+    // Update Statistiken
+    document.getElementById('total-meters').textContent = Math.floor(statistics.totalMeters + meters);
+    document.getElementById('total-clicks').textContent = statistics.totalClicks;
+    document.getElementById('total-prestiges').textContent = statistics.totalPrestiges;
+    
+    const currentMPS = calculateMPS();
+    if (currentMPS > statistics.bestMPS) {
+        statistics.bestMPS = currentMPS;
+    }
+    document.getElementById('best-mps').textContent = statistics.bestMPS.toFixed(1);
 }
 
 function updateButtons() {
@@ -86,21 +112,23 @@ function updateButtons() {
 }
 
 function calculateMPS() {
-    return autoRunners + 
+    return (autoRunners + 
            (speedCoach * 2) + 
-           (gpsWatch * 5);
+           (gpsWatch * 5)) * 
+           prestigeMultiplier;
 }
 
 function calculateClickPower() {
-    return clickPower * 
+    return (clickPower * 
            (1 + shoes * 0.2) * 
            (1 + energyDrink * 0.1) * 
-           (1 + gpsWatch * 0.3);
+           (1 + gpsWatch * 0.3)) * 
+           prestigeMultiplier;
 }
 
 function clickRun() {
     meters += calculateClickPower();
-    totalClicks++;
+    statistics.totalClicks++;
     updateDisplay();
     checkAchievements();
 }
@@ -229,5 +257,37 @@ function showNotification(message) {
     setTimeout(() => {
         notification.remove();
     }, 3000);
+}
+
+// Prestige-Funktion
+function prestige() {
+    if (meters >= 1000000) {
+        prestigeLevel++;
+        statistics.totalPrestiges++;
+        prestigeMultiplier = 1 + (prestigeLevel * 0.2); // +20% pro Level
+
+        // Speichere Gesamtmeter in Statistiken
+        statistics.totalMeters += meters;
+
+        // Reset mit Bonus
+        meters = 0;
+        autoRunners = 0;
+        autoRunnerLevel = 0;
+        speedCoach = 0;
+        coachLevel = 0;
+        shoes = 0;
+        shoesLevel = 0;
+        energyDrink = 0;
+        drinkLevel = 0;
+        gpsWatch = 0;
+        gpsLevel = 0;
+
+        // Setze Klickpower mit Bonus
+        clickPower = 1 * prestigeMultiplier;
+        trainingLevel = 1;
+
+        updateDisplay();
+        showNotification(`Prestige Level ${prestigeLevel} erreicht! Neuer Multiplikator: ${prestigeMultiplier.toFixed(1)}x`);
+    }
 }
   
