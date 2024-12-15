@@ -28,7 +28,10 @@ let achievements = {
     '5k': false,
     'ultra': false,
     'marathon': false,
-    'ironman': false
+    'ironman': false,
+    'heelstriker': false,
+    'shins': false,
+    'zone2': false
 };
 
 // Neue Variablen am Anfang der Datei
@@ -344,6 +347,25 @@ function checkAchievements() {
         drinkLevel >= 10 && 
         gpsLevel >= 10) {
         unlockAchievement('ironman', 'Ironman - Der ultimative Athlet');
+    }
+
+    // Heel Striker Achievement
+    if (!achievements['heelstriker'] && shoesLevel >= 5) {
+        unlockAchievement('heelstriker', 'Heel Striker - Der Fersenläufer');
+    }
+
+    // Shins Exploded Achievement - wenn man zu schnell zu viel läuft
+    if (!achievements['shins'] && 
+        meters >= 10000 && 
+        calculateMPS() >= 50) {
+        unlockAchievement('shins', 'Schienbeinschmerzen - Zu schnell, zu viel!');
+    }
+
+    // Zone 2 Achievement - wenn man konstant langsam läuft
+    if (!achievements['zone2'] && 
+        meters >= 20000 && 
+        calculateMPS() <= 10) {
+        unlockAchievement('zone2', 'Zone 2 - Der geduldige Läufer');
     }
 }
 
