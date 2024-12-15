@@ -2,6 +2,9 @@ body {
     text-align: center;
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 #game-container {
@@ -317,4 +320,99 @@ body {
 
 #main-section {
     display: block;
+}
+
+/* Mobile-first Styles */
+body {
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#game-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Responsive Track */
+#track-container {
+    width: 90%;
+    max-width: 400px;
+    height: 150px;
+}
+
+/* Responsive Tabs */
+.game-tabs {
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tab-button {
+    flex: 1 1 auto;
+    min-width: 100px;
+    font-size: 0.9em;
+    padding: 8px 12px;
+}
+
+/* Responsive Upgrades */
+.upgrade-button {
+    width: 100%;
+    margin: 5px 0;
+    padding: 15px;
+    font-size: 0.9em;
+}
+
+/* Responsive Skill Tree */
+.skill-tree {
+    flex-direction: column;
+}
+
+.skill-column {
+    width: 100%;
+}
+
+/* Media Queries für größere Bildschirme */
+@media (min-width: 768px) {
+    body {
+        padding: 20px;
+    }
+
+    .skill-tree {
+        flex-direction: row;
+    }
+
+    .tab-button {
+        font-size: 1em;
+    }
+
+    #track-container {
+        height: 200px;
+    }
+}
+
+/* Touch-Optimierungen */
+button {
+    min-height: 44px; /* Mindesthöhe für Touch-Targets */
+    touch-action: manipulation;
+}
+
+/* Verhindern von Text-Selektion */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Bessere Lesbarkeit auf mobilen Geräten */
+.stat-item, .achievement, .skill-item {
+    padding: 12px;
+    margin: 8px 0;
+}
+
+/* Verbesserte Scrollbarkeit */
+.game-section {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 } 

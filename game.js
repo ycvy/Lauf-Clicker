@@ -92,10 +92,21 @@ function getGPSCost() {
     return Math.floor(100 * Math.pow(2.5, gpsLevel));
 }
 
+// Füge diese Hilfsfunktion hinzu
+function formatNumber(num) {
+    if (num >= 1e6) {
+        return (num / 1e6).toFixed(2) + 'M';
+    }
+    if (num >= 1e3) {
+        return (num / 1e3).toFixed(1) + 'K';
+    }
+    return num.toFixed(0);
+}
+
 function updateDisplay() {
     document.getElementById('meters').textContent = Math.floor(meters);
-    document.getElementById('mps').textContent = calculateMPS();
-    document.getElementById('click-power').textContent = calculateClickPower().toFixed(1);
+    document.getElementById('mps').textContent = formatNumber(calculateMPS());
+    document.getElementById('click-power').textContent = formatNumber(calculateClickPower());
     updateButtons();
 
     // Update Prestige Informationen
@@ -438,4 +449,35 @@ function checkSkillPointMilestones() {
         }
     });
 }
+
+// Füge Touch-Event-Handler hinzu
+document.addEventListener('DOMContentLoaded', function() {
+    const trackOuter = document.getElementById('track-outer');
+    
+    // Verhindere Zoom bei Doppeltipp auf mobilen Geräten
+    trackOuter.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        clickRun();
+    });
+
+    // Verhindere Standard-Touch-Verhalten
+    trackOuter.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+    });
+
+    // Optimiere Performance für mobile Geräte
+    let lastUpdate = 0;
+    const UPDATE_INTERVAL = 100; // Millisekunden
+
+    function optimizedUpdate() {
+        const now = Date.now();
+        if (now - lastUpdate >= UPDATE_INTERVAL) {
+            updateDisplay();
+            lastUpdate = now;
+        }
+        requestAnimationFrame(optimizedUpdate);
+    }
+
+    requestAnimationFrame(optimizedUpdate);
+});
   
