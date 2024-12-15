@@ -14,6 +14,17 @@ let shoesLevel = 0;
 let drinkLevel = 0;
 let gpsLevel = 0;
 
+// Füge diese Variablen am Anfang hinzu
+let totalClicks = 0;
+let achievements = {
+    '100m': false,
+    '1km': false,
+    '10km': false,
+    'clicks': false,
+    'autorunner': false,
+    'upgrades': false
+};
+
 function getAutoRunnerCost() {
     return Math.floor(10 * Math.pow(1.5, autoRunnerLevel));
 }
@@ -89,7 +100,9 @@ function calculateClickPower() {
 
 function clickRun() {
     meters += calculateClickPower();
+    totalClicks++;
     updateDisplay();
+    checkAchievements();
 }
 
 function buyAutoRunner() {
@@ -99,6 +112,7 @@ function buyAutoRunner() {
         autoRunners += 1;
         autoRunnerLevel += 1;
         updateDisplay();
+        checkAchievements();
     }
 }
 
@@ -163,3 +177,57 @@ setInterval(() => {
 
 // Initialisiere die Anzeige beim Start
 updateDisplay(); 
+
+// Füge diese Funktion hinzu
+function checkAchievements() {
+    // Meter Achievements
+    if (!achievements['100m'] && meters >= 100) {
+        unlockAchievement('100m', 'Anfänger-Läufer');
+    }
+    if (!achievements['1km'] && meters >= 1000) {
+        unlockAchievement('1km', 'Hobby-Jogger');
+    }
+    if (!achievements['10km'] && meters >= 10000) {
+        unlockAchievement('10km', 'Ausdauer-Läufer');
+    }
+
+    // Klick Achievement
+    if (!achievements['clicks'] && totalClicks >= 100) {
+        unlockAchievement('clicks', 'Klick-Champion');
+    }
+
+    // Autoläufer Achievement
+    if (!achievements['autorunner'] && autoRunnerLevel >= 5) {
+        unlockAchievement('autorunner', 'Trainer');
+    }
+
+    // Alle Upgrade-Typen Achievement
+    if (!achievements['upgrades'] && 
+        autoRunnerLevel > 0 && 
+        trainingLevel > 1 && 
+        coachLevel > 0 && 
+        shoesLevel > 0 && 
+        drinkLevel > 0 && 
+        gpsLevel > 0) {
+        unlockAchievement('upgrades', 'Ausrüstungs-Profi');
+    }
+}
+
+function unlockAchievement(id, name) {
+    achievements[id] = true;
+    document.getElementById(`achievement-${id}`).classList.remove('locked');
+    document.getElementById(`achievement-${id}`).classList.add('unlocked');
+    showNotification(`Achievement freigeschaltet: ${name}!`);
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'achievement-notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+  
