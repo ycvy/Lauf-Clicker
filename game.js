@@ -121,12 +121,9 @@ function updateDisplay() {
     document.getElementById('meters').textContent = Math.floor(meters);
     document.getElementById('mps').textContent = formatNumber(calculateMPS());
     document.getElementById('click-power').textContent = formatNumber(calculateClickPower());
-    
-    // Update Geld Anzeige
     document.getElementById('money').textContent = formatNumber(money); // Geld anzeigen
-
     updateButtons();
-    
+
     // Update Prestige Informationen
     document.getElementById('prestige-level').textContent = prestigeLevel;
     document.getElementById('prestige-multiplier').textContent = prestigeMultiplier.toFixed(1);
@@ -504,6 +501,33 @@ function showTab(tabName) {
     }
 }
 
+let isMusicPlaying = false;
+
+function startBackgroundMusic() {
+    const music = document.getElementById('background-music');
+    music.volume = 0.5; // Lautstärke einstellen (0.0 bis 1.0)
+    music.play().catch(error => {
+        console.error("Musik konnte nicht abgespielt werden:", error);
+    });
+}
+
+function toggleMusic() {
+    const music = document.getElementById('background-music');
+    if (isMusicPlaying) {
+        music.pause();
+    } else {
+        music.play().catch(error => {
+            console.error("Musik konnte nicht abgespielt werden:", error);
+        });
+    }
+    isMusicPlaying = !isMusicPlaying; // Status umschalten
+}
+
+// Musik beim Klicken auf den Start-Button starten
+document.getElementById('start-button').addEventListener('click', function() {
+    startBackgroundMusic();
+});
+
 // Füge diese Funktion hinzu
 function checkSkillPointMilestones() {
     skillPointMilestones.forEach(milestone => {
@@ -545,6 +569,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     requestAnimationFrame(optimizedUpdate);
 });
-
-
   
