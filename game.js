@@ -103,6 +103,10 @@ function getGPSCost() {
 
 // Füge diese Hilfsfunktion hinzu
 function formatNumber(num) {
+    if (typeof num !== 'number') {
+        console.error('Invalid number:', num); // Debugging-Ausgabe
+        return '0'; // Rückgabe eines Standardwerts, wenn num kein gültiger Wert ist
+    }
     if (num >= 1e6) {
         return (num / 1e6).toFixed(2) + 'M';
     }
@@ -111,13 +115,18 @@ function formatNumber(num) {
     }
     return num.toFixed(0);
 }
-
+let moneyElement = document.getElementById('money');
+money = parseFloat(moneyElement.textContent) || 0; // Konvertiere in eine Zahl
 function updateDisplay() {
     document.getElementById('meters').textContent = Math.floor(meters);
     document.getElementById('mps').textContent = formatNumber(calculateMPS());
     document.getElementById('click-power').textContent = formatNumber(calculateClickPower());
-    updateButtons();
+    
+    // Update Geld Anzeige
+    document.getElementById('money').textContent = formatNumber(money); // Geld anzeigen
 
+    updateButtons();
+    
     // Update Prestige Informationen
     document.getElementById('prestige-level').textContent = prestigeLevel;
     document.getElementById('prestige-multiplier').textContent = prestigeMultiplier.toFixed(1);
@@ -171,12 +180,12 @@ function updateButtons() {
     document.getElementById('gps-level').textContent = gpsLevel;
 
     // Deaktiviere Buttons wenn nicht genug Meter vorhanden sind
-    document.getElementById('autorunner-button').disabled = meters < getAutoRunnerCost();
-    document.getElementById('training-button').disabled = meters < getTrainingCost();
-    document.getElementById('coach-button').disabled = meters < getSpeedCoachCost();
-    document.getElementById('shoes-button').disabled = meters < getShoesCost();
-    document.getElementById('drink-button').disabled = meters < getEnergyDrinkCost();
-    document.getElementById('gps-button').disabled = meters < getGPSCost();
+    document.getElementById('autorunner-button').disabled = money < getAutoRunnerCost();
+    document.getElementById('training-button').disabled = money < getTrainingCost();
+    document.getElementById('coach-button').disabled = money < getSpeedCoachCost();
+    document.getElementById('shoes-button').disabled = money < getShoesCost();
+    document.getElementById('drink-button').disabled = money < getEnergyDrinkCost();
+    document.getElementById('gps-button').disabled = money < getGPSCost();
 }
 
 function calculateMPS() {
@@ -195,7 +204,9 @@ function calculateClickPower() {
 }
 
 function clickRun() {
-    meters += calculateClickPower();
+    let earnedMoney = calculateClickPower(); // Geld basierend auf Klickkraft verdienen
+    money += earnedMoney; // Geld erhöhen
+    meters += earnedMoney;
     statistics.totalClicks++;
     
     // Prüfe Milestones bei jedem Update
@@ -207,8 +218,8 @@ function clickRun() {
 
 function buyAutoRunner() {
     const cost = getAutoRunnerCost();
-    if (meters >= cost) {
-        meters -= cost;
+    if (money >= cost) { // Überprüfe, ob genug Geld vorhanden ist
+        money -= cost; // Geld abziehen
         autoRunners += 1;
         autoRunnerLevel += 1;
         updateDisplay();
@@ -218,8 +229,8 @@ function buyAutoRunner() {
 
 function upgradeClick() {
     const cost = getTrainingCost();
-    if (meters >= cost) {
-        meters -= cost;
+    if (money >= cost) {
+        money -= cost;
         clickPower += 1;
         trainingLevel += 1;
         updateDisplay();
@@ -228,8 +239,8 @@ function upgradeClick() {
 
 function buySpeedCoach() {
     const cost = getSpeedCoachCost();
-    if (meters >= cost) {
-        meters -= cost;
+    if (money >= cost) {
+        money -= cost;
         speedCoach += 1;
         coachLevel += 1;
         updateDisplay();
@@ -238,8 +249,8 @@ function buySpeedCoach() {
 
 function buyShoes() {
     const cost = getShoesCost();
-    if (meters >= cost) {
-        meters -= cost;
+    if (money >= cost) {
+        money -= cost;
         shoes += 1;
         shoesLevel += 1;
         updateDisplay();
@@ -248,8 +259,8 @@ function buyShoes() {
 
 function buyEnergyDrink() {
     const cost = getEnergyDrinkCost();
-    if (meters >= cost) {
-        meters -= cost;
+    if (money >= cost) {
+        money -= cost;
         energyDrink += 1;
         drinkLevel += 1;
         console.log("Bought Energy Drink - Current amount:", energyDrink);
@@ -260,8 +271,8 @@ function buyEnergyDrink() {
 
 function buyGPS() {
     const cost = getGPSCost();
-    if (meters >= cost) {
-        meters -= cost;
+    if (money >= cost) {
+        money -= cost;
         gpsWatch += 1;
         gpsLevel += 1;
         updateDisplay();
@@ -341,7 +352,7 @@ function checkAchievements() {
     if (!achievements['heelstriker'] && meters >= 500) {
         unlockAchievement('heelstriker', 'Heel Striker');
     }
-
+    //
     if (!achievements['zone2'] && meters >= 15000) {
         unlockAchievement('zone2', 'Zone 2');
     }
@@ -534,4 +545,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     requestAnimationFrame(optimizedUpdate);
 });
+
+
   
