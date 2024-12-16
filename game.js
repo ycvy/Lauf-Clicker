@@ -338,6 +338,14 @@ function checkAchievements() {
         unlockAchievement('marathon', 'Marathon Finisher');
     }
 
+    if (!achievements['heelstriker'] && meters >= 500) {
+        unlockAchievement('heelstriker', 'Heel Striker');
+    }
+
+    if (!achievements['zone2'] && meters >= 15000) {
+        unlockAchievement('zone2', 'Zone 2');
+    }
+
     if (!achievements['ironman'] && 
         meters >= 100000 && 
         autoRunnerLevel >= 10 && 
