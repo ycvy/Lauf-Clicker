@@ -20,6 +20,12 @@ let achievements = {
     '100m': false,
     '1km': false,
     '10km': false,
+    '100km': false,
+    '100M': false,
+    '200km': false,
+    '500km': false,
+    '1000km': false,
+    '1000000km': false,
     'clicks': false,
     'autorunner': false,
     'upgrades': false,
@@ -301,6 +307,25 @@ function checkAchievements() {
         unlockAchievement('10km', 'Ausdauer-Läufer');
     }
 
+    if (!achievements['100km'] && meters >= 100000) {
+        unlockAchievement('100km', 'Ultra-Läufer');
+    }
+    if (!achievements['100M'] && meters >= 160900) {
+        unlockAchievement('100M', '100Meilen-Läufer');
+    }
+    if (!achievements['200km'] && meters >= 200000) {
+        unlockAchievement('200km', '200k-Ultra-Läufer');
+    }
+    if (!achievements['500km'] && meters >= 500000) {
+        unlockAchievement('500km', '500k-Ultra-Läufer');
+    }
+    if (!achievements['1000km'] && meters >= 1000000) {
+        unlockAchievement('1000km', '1000km-Ultra-Läufer');
+    }
+    if (!achievements['1000000km'] && meters >= 1000000000) {
+        unlockAchievement('1000000km', '1000000km-Ultra-Läufer');
+    }
+
     // Klick Achievement
     if (!achievements['clicks'] && statistics.totalClicks >= 100) {
         unlockAchievement('clicks', 'Klick-Champion');
@@ -352,6 +377,10 @@ function checkAchievements() {
     //
     if (!achievements['zone2'] && meters >= 15000) {
         unlockAchievement('zone2', 'Zone 2');
+    }
+
+    if (!achievements['shins'] && meters >= 10) {
+        unlockAchievement('shins', 'Schienbeinschmerzen');
     }
 
     if (!achievements['ironman'] && 
