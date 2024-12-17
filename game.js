@@ -26,7 +26,10 @@ let achievements = {
     '500km': false,
     '1000km': false,
     '1000000km': false,
-    'clicks': false,
+    '100clicks': false,
+    '1.000clicks': false,
+    '10.000clicks': false,
+    '100.000clicks': false,
     'autorunner': false,
     'upgrades': false,
     'gu': false,
@@ -327,8 +330,17 @@ function checkAchievements() {
     }
 
     // Klick Achievement
-    if (!achievements['clicks'] && statistics.totalClicks >= 100) {
-        unlockAchievement('clicks', 'Klick-Champion');
+    if (!achievements['100clicks'] && statistics.totalClicks >= 100) {
+        unlockAchievement('100clicks', 'Klick-Novize');
+    }
+    if (!achievements['1.000clicks'] && statistics.totalClicks >= 1000) {
+        unlockAchievement('1.000clicks', 'Klick-Erfahrener');
+    }
+    if (!achievements['10.000clicks'] && statistics.totalClicks >= 10000) {
+        unlockAchievement('10.000clicks', 'Klick-Profi');
+    }
+    if (!achievements['100.000clicks'] && statistics.totalClicks >= 100000) {
+        unlockAchievement('100.000clicks', 'Klick-Meister');
     }
 
     // Autoläufer Achievement
