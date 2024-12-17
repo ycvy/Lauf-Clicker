@@ -5,6 +5,11 @@ body {
     margin: 0;
     padding: 10px;
     box-sizing: border-box;
+    background-image: url("running 24 hours.jpeg"), url("Endless Yard.jpeg");
+    background-size: contain, contain;
+    background-position: left, right;
+    background-repeat: no-repeat, no-repeat;
+    color: black;
 }
 
 #game-container {
